@@ -20,6 +20,7 @@
 #include "patternframemodeltests.h"
 #include "patternscrollmodeltests.h"
 #include "esp8266bootloadercommandstests.h"
+#include "projectfiletests.h"
 
 int main(int argc, char *argv[])
 {
@@ -87,6 +88,9 @@ int main(int argc, char *argv[])
 
     Esp8266BootloaderCommandsTests esp8266BootloaderCommandsTests;
     result |= QTest::qExec(&esp8266BootloaderCommandsTests);
+
+    ProjectFileTests projectFileTests;
+    result |= QTest::qExec(&projectFileTests);
 
     return result;
 }
