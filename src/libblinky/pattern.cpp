@@ -325,7 +325,10 @@ QDataStream &operator>>(QDataStream &stream, Pattern &pattern)
 
 QDataStream &operator<<(QDataStream &stream, const QPointer<Pattern> &pattern)
 {
-    // TODO: Test if model exists?
+    // TODO: Is this the right thing to do if the pointer is invalid?
+    if(pattern.isNull())
+        return stream;
+
     stream << *(pattern.data());
     return stream;
 }

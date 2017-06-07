@@ -29,10 +29,8 @@ void ProjectFileTests::headerVersionTest()
 
 void ProjectFileTests::sceneConfigurationTest()
 {
-
     ProjectFile newProjectFile;
     SceneTemplate newScenetemplate;
-
 
     // Pack the data into a stream
     QBuffer buffer;
@@ -41,30 +39,23 @@ void ProjectFileTests::sceneConfigurationTest()
     QDataStream stream;
     stream.setDevice(&buffer);
 
-
     // write scene configuration
     fixture = Fixture::makeFixture("Linear", QSize(1,1));
 
     fixture->setColorMode((ColorMode)RGB);
-
 
     newProjectFile.writeSceneConfiguration(stream, fixture);
 
     // reset
     buffer.reset();
 
-
     // read scene configuration
     QVERIFY(newProjectFile.readSceneConfiguration(stream, &newScenetemplate) == true);
 
     QCOMPARE(newScenetemplate.size, QSize(1,1));
-
     QCOMPARE(newScenetemplate.fixtureType, QString("Linear"));
-
     QCOMPARE(newScenetemplate.colorMode, ColorMode::RGB);
-
     QCOMPARE(newScenetemplate.firmwareName, QString("default"));
-
 }
 
 void ProjectFileTests::patternsTest()

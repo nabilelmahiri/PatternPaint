@@ -121,10 +121,6 @@ public:
     friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const Pattern &pattern);
     friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, Pattern &pattern);
 
-    // TODO: Fix PatternCollectionModel implementation, remove these
-    friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const QPointer<Pattern> &pattern);
-    friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, QPointer<Pattern> &pattern);
-
 private:
     QPointer<PatternModel> model;   ///< Storage container for the images
 
@@ -139,5 +135,9 @@ private:
     // the undo and event notification stacks.
     QUuid uuid;
 };
+
+// TODO: Fix PatternCollectionModel implementation, remove these
+LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const QPointer<Pattern> &pattern);
+LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, QPointer<Pattern> &pattern);
 
 #endif // PATTERNITEM_H
