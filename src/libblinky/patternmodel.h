@@ -1,7 +1,9 @@
-#ifndef PATTERNMODEL
-#define PATTERNMODEL
+#ifndef PATTERNMODEL_H
+#define PATTERNMODEL_H
 
 #include "libblinkyglobal.h"
+
+#include "pattern.h"
 
 #include <QAbstractListModel>
 #include <QObject>
@@ -25,8 +27,9 @@ public:
         EditImage,                      // Image data for editing
     };
 
-    PatternModel(QObject *parent = 0) :
-        QAbstractListModel(parent)
+    PatternModel(Pattern::PatternType type, QObject *parent = 0) :
+        QAbstractListModel(parent),
+        type(type)
     {
     }
 
@@ -44,6 +47,16 @@ public:
     virtual bool removeRows(int position, int rows, const QModelIndex &index = QModelIndex()) = 0;
 
     virtual QUndoStack *getUndoStack() = 0;
+
+    friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const PatternModel &model);
+    friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, PatternModel &model);
+
+    const Pattern::PatternType type;
+
+private:
+    virtual void toStream(QDataStream &stream) const = 0;
+    virtual void fromStream(QDataStream &stream) = 0;
 };
 
-#endif // PATTERNMODEL
+#endif // PATTERNMODEL_H
+

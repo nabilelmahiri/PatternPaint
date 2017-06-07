@@ -8,7 +8,8 @@
 #include <QUndoStack>
 #include <QPointer>
 #include <QUuid>
-#include "patternmodel.h"
+
+class PatternModel;
 
 /// Representation of a pattern based on a frame model.
 class LIBBLINKY_EXPORT Pattern : public QObject
@@ -20,6 +21,9 @@ public:
         Scrolling,
         FrameBased
     };
+    Q_ENUM(PatternType)
+
+    Pattern(QListWidget *parent = 0);
 
     /// Constructor for an empty pattern item
     /// @param size Size of the display, in pixels
@@ -103,29 +107,30 @@ public:
     PatternModel *getModel() const;
 
     /// Get the UUID for this pattern
-    const QUuid getUuid() const
-    {
-        return uuid;
-    }
+    const QUuid getUuid() const;
 
     /// True if the pattern editor should show a playback indicator for ths
     /// pattern type
     /// TODO: Delete this
-    bool hasPlaybackIndicator() const
-    {
-        return playbackIndicator;
-    }
+    bool hasPlaybackIndicator() const;
 
-    bool hasTimeline() const
-    {
-        return timeline;
-    }
+    bool hasTimeline() const;
+
+    PatternType getType() const;
+
+    friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const Pattern &pattern);
+    friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, Pattern &pattern);
+
+    // TODO: Fix PatternCollectionModel implementation, remove these
+    friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const QPointer<Pattern> &pattern);
+    friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, QPointer<Pattern> &pattern);
 
 private:
     QPointer<PatternModel> model;   ///< Storage container for the images
 
+    void setModel(PatternModel* newModel);
+
     // TODO: Push these into the model?
-    PatternType type;
     bool playbackIndicator;
     bool timeline;
 

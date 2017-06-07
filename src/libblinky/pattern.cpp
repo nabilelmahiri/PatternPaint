@@ -5,9 +5,16 @@
 #include <QDebug>
 #include <QPainter>
 
+Pattern::Pattern(QListWidget *parent) :
+    QObject(parent)
+{
+    uuid = QUuid::createUuid();
+
+    // TODO: Anything need initialization here?
+}
+
 Pattern::Pattern(PatternType type, QSize patternSize, int frameCount, QListWidget *parent) :
-    QObject(parent),
-    type(type)
+    QObject(parent)
 {
     uuid = QUuid::createUuid();
 
@@ -72,7 +79,7 @@ bool Pattern::load(const QString &newFileName)
         return false;
 
 
-    switch (type) {
+    switch (model->type) {
     case FrameBased:
     {
         QSize frameSize = model->data(model->index(0), PatternModel::FrameSize).toSize();
@@ -143,7 +150,7 @@ bool Pattern::saveAs(const QString newFileName)
     QSize frameSize = model->data(model->index(0), PatternModel::FrameSize).toSize();
     QImage output;
 
-    switch (type) {
+    switch (model->type) {
     case FrameBased:
     {
         // Create a big image consisting of all the frames side-by-side
@@ -225,6 +232,32 @@ PatternModel * Pattern::getModel() const
     return model;
 }
 
+const QUuid Pattern::getUuid() const
+{
+    return uuid;
+}
+
+bool Pattern::hasPlaybackIndicator() const
+{
+    return playbackIndicator;
+}
+
+bool Pattern::hasTimeline() const
+{
+    return timeline;
+}
+
+Pattern::PatternType Pattern::getType() const
+{
+    return model->type;
+}
+
+void Pattern::setModel(PatternModel *newModel)
+{
+    // TODO: What other state needs to happen here?
+    model = newModel;
+}
+
 int Pattern::getFrameCount() const
 {
     return model->rowCount();
@@ -251,4 +284,56 @@ void Pattern::deleteFrame(int index)
 void Pattern::addFrame(int index)
 {
     model->insertRow(index);
+}
+
+QDataStream &operator<<(QDataStream &stream, const Pattern &pattern)
+{
+    // TODO: Test if model exists first
+
+    stream << (int)(pattern.getModel()->type);
+    stream << *(pattern.getModel());
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Pattern &pattern)
+{
+    // TODO: Test if model exists
+
+    Pattern::PatternType type;
+    stream >> (int &)type;
+
+    PatternModel *newModel;
+
+    // TODO: Consolidate this with constructor, file load versions.
+    switch (type) {
+    case Pattern::FrameBased:
+        newModel = new PatternFrameModel(QSize(), &pattern);
+        break;
+    case Pattern::Scrolling:
+        newModel = new PatternScrollModel(QSize(), &pattern);
+        break;
+    default:
+        // ??
+        break;
+    }
+
+    stream >> *(newModel);
+    pattern.setModel(newModel);
+
+    return stream;
+}
+
+QDataStream &operator<<(QDataStream &stream, const QPointer<Pattern> &pattern)
+{
+    // TODO: Test if model exists?
+    stream << *(pattern.data());
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, QPointer<Pattern> &pattern)
+{
+    // TODO: Test if model exists?
+    pattern = new Pattern();
+    stream >> *(pattern.data());
+    return stream;
 }

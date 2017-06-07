@@ -1,6 +1,8 @@
 #ifndef PROJECTFILE_H
 #define PROJECTFILE_H
 
+#include "libblinkyglobal.h"
+
 #include "patterncollectionmodel.h"
 #include "patterncollection.h"
 #include "fixture.h"
@@ -12,14 +14,14 @@
 #define PROJECT_FORMAT_VERSION     1.0              /// Version of PatternPaint Project format
 
 
-class ProjectFile
+class LIBBLINKY_EXPORT ProjectFile
 {
 public:
     ProjectFile();
 
-    bool save(QString filename, QPointer<Fixture> fixture, PatternCollection* newPatterncollection);
+    bool save(QString filename, QPointer<Fixture> fixture, PatternCollection* newPatternCollection);
 
-    bool open(QString filename, SceneTemplate* newScenetemplate, PatternCollection* newPatterncollection);
+    bool open(QString filename, SceneTemplate* newSceneTemplate, PatternCollection* newPatternCollection);
 
     void writeHeaderVersion(QDataStream& stream, float version);
 
@@ -29,9 +31,6 @@ public:
 
     bool readSceneConfiguration(QDataStream &stream, SceneTemplate* newScenetemplate);
 
-    void writePatterns(QDataStream &stream, PatternCollection* newPatterncollection);
-
-    bool readPatterns(QDataStream& stream, PatternCollection* newPatterncollection);
 };
 
 #endif // PROJECTFILE_H

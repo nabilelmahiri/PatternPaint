@@ -1,4 +1,5 @@
 #include "patterncollectionmodel.h"
+#include "patternmodel.h"
 
 #include <QDebug>
 
@@ -150,4 +151,16 @@ bool PatternCollectionModel::removeRows(int position, int rows, const QModelInde
 
     endRemoveRows();
     return true;
+}
+
+QDataStream &operator<<(QDataStream &stream, const PatternCollectionModel &patternCollectionModel)
+{
+    stream << patternCollectionModel.patterns;
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, PatternCollectionModel &patternCollectionModel)
+{
+    stream >> patternCollectionModel.patterns;
+    return stream;
 }

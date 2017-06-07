@@ -27,6 +27,9 @@ public:
 
     bool isEmpty() const;
 
+    friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, PatternCollection &model);
+    friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, PatternCollection &model);
+
 private:
     PatternCollectionModel model;
 };

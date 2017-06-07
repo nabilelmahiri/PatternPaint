@@ -7,7 +7,7 @@
 #include <QPainter>
 
 PatternScrollModel::PatternScrollModel(QSize size, QObject *parent) :
-    PatternModel(parent)
+    PatternModel(Pattern::Scrolling, parent)
 {
     state.frameSize = size;
     state.frameSpeed = PATTERN_FRAME_SPEED_DEFAULT_VALUE;
@@ -15,7 +15,7 @@ PatternScrollModel::PatternScrollModel(QSize size, QObject *parent) :
 
     undoStack.setUndoLimit(50);
 
-    // TODO: How to handle 0-sized image?
+    // TODO: How to handle 0-sized image? This is buggy.
     state.image = QImage(0, state.frameSize.height(), QImage::Format_ARGB32_Premultiplied);
 }
 
@@ -209,6 +209,9 @@ bool PatternScrollModel::setData(const QModelIndex &index, const QVariant &value
 
 bool PatternScrollModel::insertRows(int position, int rows, const QModelIndex &)
 {
+    if(rows <= 0)
+        return false;
+
     if(position < 0)
         return false;
 
@@ -253,6 +256,9 @@ bool PatternScrollModel::insertRows(int position, int rows, const QModelIndex &)
 
 bool PatternScrollModel::removeRows(int position, int rows, const QModelIndex &)
 {
+    if(rows <= 0)
+        return false;
+
     if(position < 0)
         return false;
 
@@ -294,17 +300,15 @@ bool PatternScrollModel::removeRows(int position, int rows, const QModelIndex &)
     return true;
 }
 
-QDataStream &operator<<(QDataStream &stream, const PatternScrollModel &model)
+void PatternScrollModel::toStream(QDataStream &stream) const
 {
-    stream << model.state.frameSize;
-    stream << model.state.fileName;
-    stream << model.state.frameSpeed;
-    stream << model.state.image;
-
-    return stream;
+    stream << state.frameSize;
+    stream << state.fileName;
+    stream << state.frameSpeed;
+    stream << state.image;
 }
 
-QDataStream &operator>>(QDataStream &stream, PatternScrollModel &model)
+void PatternScrollModel::fromStream(QDataStream &stream)
 {
     PatternScrollModel::State newState;
 
@@ -319,8 +323,7 @@ QDataStream &operator>>(QDataStream &stream, PatternScrollModel &model)
     // TODO: Not clear if the format actually makes a difference
     newState.image = newState.image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
 
-    model.state = newState;
+    state = newState;
     // TODO: Be noisy with messages, since our state just changed?
 
-    return stream;
 }

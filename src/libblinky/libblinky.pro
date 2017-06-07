@@ -83,7 +83,8 @@ SOURCES +=  \
     avr109firmwareloader.cpp \
     usbdeviceidentifier.cpp \
     blinkycontrollerinfo.cpp \
-    projectfile.cpp
+    projectfile.cpp \
+    patternmodel.cpp
 
 # For platforms that have serial ports
 # TODO: Pull hard-coded references to BlinkyTape from the gui, allowing this section to be switchable

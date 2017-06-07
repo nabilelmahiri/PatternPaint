@@ -57,3 +57,15 @@ bool PatternCollection::isEmpty() const
 {
     return count() == 0;
 }
+
+QDataStream &operator<<(QDataStream &stream, PatternCollection &patternCollection)
+{
+    stream << *(patternCollection.getModel());
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, PatternCollection &patternCollection)
+{
+    stream >> *(patternCollection.getModel());
+    return stream;
+}

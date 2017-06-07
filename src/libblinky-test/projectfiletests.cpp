@@ -24,9 +24,7 @@ void ProjectFileTests::headerVersionTest()
     buffer.reset();
 
     // read header
-    QVERIFY(newProjectFile.readHeaderVersion(stream) == PROJECT_FORMAT_VERSION);
-
-
+    QCOMPARE(newProjectFile.readHeaderVersion(stream), PROJECT_FORMAT_VERSION);
 }
 
 void ProjectFileTests::sceneConfigurationTest()
@@ -59,22 +57,20 @@ void ProjectFileTests::sceneConfigurationTest()
     // read scene configuration
     QVERIFY(newProjectFile.readSceneConfiguration(stream, &newScenetemplate) == true);
 
-    QVERIFY(newScenetemplate.size == QSize(1,1));
+    QCOMPARE(newScenetemplate.size, QSize(1,1));
 
-    QVERIFY(newScenetemplate.fixtureType == "Linear");
+    QCOMPARE(newScenetemplate.fixtureType, QString("Linear"));
 
-    QVERIFY(newScenetemplate.colorMode == (ColorMode)RGB);
+    QCOMPARE(newScenetemplate.colorMode, ColorMode::RGB);
 
-    QVERIFY(newScenetemplate.firmwareName == "default");
+    QCOMPARE(newScenetemplate.firmwareName, QString("default"));
 
 }
 
 void ProjectFileTests::patternsTest()
 {
-
-    ProjectFile newProjectFile;
-    PatternCollection newPatterncollection;
-
+    PatternCollection writePatternCollection;
+    PatternCollection readPatternCollection;
 
     // Pack the data into a stream
     QBuffer buffer;
@@ -88,24 +84,20 @@ void ProjectFileTests::patternsTest()
     QSize size = QSize(3,7);
     float frameSpeed = 15.5;
 
-    Pattern *newPattern = new Pattern(type, size, 0);
+    Pattern *newPattern = new Pattern(type, size, 1);
     newPattern->setFrameSpeed(frameSpeed);
-    newPatterncollection.add(newPattern,0);
+    writePatternCollection.add(newPattern,0);
 
-    newProjectFile.writePatterns(stream, &newPatterncollection);
+    stream << writePatternCollection;
 
     // reset
     buffer.reset();
-    newPatterncollection.clear();
-
 
     // read patterns
-    QVERIFY(newProjectFile.readPatterns(stream, &newPatterncollection) == true);
-
-    QVERIFY(newPatterncollection.at(0)->getType() == Pattern::Scrolling);
-
-    QVERIFY(newPatterncollection.at(0)->getFrameSize() == size);
-
-    QVERIFY(newPatterncollection.at(0)->getFrameSpeed() == frameSpeed);
-
+    stream >> readPatternCollection;
+    QCOMPARE(stream.status(), QDataStream::Ok);
+    QCOMPARE(readPatternCollection.count(), 1);
+    QCOMPARE(readPatternCollection.at(0)->getType(), type);
+    QCOMPARE(readPatternCollection.at(0)->getFrameSize(), size);
+    QCOMPARE(readPatternCollection.at(0)->getFrameSpeed(), frameSpeed);
 }

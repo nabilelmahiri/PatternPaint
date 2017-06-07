@@ -47,6 +47,9 @@ public:
     friend class PatternScrollUndoCommand;
 
 private:
+    void toStream(QDataStream &stream) const;
+    void fromStream(QDataStream &stream);
+
     QUndoStack undoStack;       ///< Undo stack for this pattern
 
     State state;
@@ -54,9 +57,6 @@ private:
     void pushUndoState();
 
     void applyUndoState(State newState);
-
-    friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &, const PatternScrollModel &);
-    friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &, PatternScrollModel &);
 };
 
 #endif // PATTERNSCROLLMODEL_H

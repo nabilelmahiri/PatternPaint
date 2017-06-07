@@ -9,7 +9,7 @@ ProjectFile::ProjectFile()
 }
 
 
-bool ProjectFile::save(QString filename, QPointer<Fixture> fixture, PatternCollection *newPatterncollection)
+bool ProjectFile::save(QString filename, QPointer<Fixture> fixture, PatternCollection *newPatternCollection)
 {
 
     qDebug() << "Save project:" << filename;
@@ -31,8 +31,7 @@ bool ProjectFile::save(QString filename, QPointer<Fixture> fixture, PatternColle
     writeSceneConfiguration(out, fixture);
 
     // write patterns
-    writePatterns(out, newPatterncollection);
-
+    out << newPatternCollection;
 
     file.close();
 
@@ -42,7 +41,7 @@ bool ProjectFile::save(QString filename, QPointer<Fixture> fixture, PatternColle
 }
 
 
-bool ProjectFile::open(QString filename, SceneTemplate* newScenetemplate, PatternCollection *newPatterncollection)
+bool ProjectFile::open(QString filename, SceneTemplate* newSceneTemplate, PatternCollection *newPatternCollection)
 {
     qDebug()<<"Open Project:" << filename;
 
@@ -55,27 +54,25 @@ bool ProjectFile::open(QString filename, SceneTemplate* newScenetemplate, Patter
     // read project file
     QDataStream in(&file);
 
-
     // read header
     if(readHeaderVersion(in) != PROJECT_FORMAT_VERSION){
         qDebug()<< "Error: Format version incorrectly";
         return false;
     }
 
-
     // read scene configuration
-    if(!readSceneConfiguration(in, newScenetemplate))
+    if(!readSceneConfiguration(in, newSceneTemplate))
         return false;
 
-
     // read Patterns
-    if(readPatterns(in, newPatterncollection) && in.status() == QDataStream::Ok){
-        qDebug() << "Project successful readed";
-    }else{
+    in >> *(newPatternCollection);
+    if(in.status() == QDataStream::Ok) {
+        qDebug() << "Project successful read";
+    }
+    else {
         qDebug() << "Project read failed!";
         return false;
     }
-
 
     return true;
 }
@@ -86,14 +83,14 @@ void ProjectFile::writeHeaderVersion(QDataStream &stream, float version)
 
     stream << (QString)PROJECT_HEADER;
     stream << version;
-    stream << (QString)GIT_VERSION;
+//    stream << (QString)GIT_VERSION;
 }
 
 float ProjectFile::readHeaderVersion(QDataStream &stream)
 {
 
     QString header;
-    QString patternPaintVersion;
+//    QString patternPaintVersion;
     float formatVersion;
 
     stream.setVersion(QDataStream::Qt_5_8);
@@ -106,9 +103,8 @@ float ProjectFile::readHeaderVersion(QDataStream &stream)
 
     stream >> formatVersion;
 
-    stream >> patternPaintVersion;
-
-    qDebug() << "Project created with Pattern Paint version:" << patternPaintVersion;
+//    stream >> patternPaintVersion;
+//    qDebug() << "Project created with Pattern Paint version:" << patternPaintVersion;
 
     return formatVersion;
 }
@@ -144,55 +140,4 @@ bool ProjectFile::readSceneConfiguration(QDataStream &stream, SceneTemplate *new
         return false;
 
     return true;
-}
-
-void ProjectFile::writePatterns(QDataStream &stream, PatternCollection *newPatterncollection)
-{
-    for(int i=0;i<newPatterncollection->count();i++){
-
-        stream << (qint32)newPatterncollection->at(i)->getType();
-        newPatterncollection->at(i)->getModel()->writeDataToStream(stream);
-
-        newPatterncollection->at(i)->setModified(false);
-        newPatterncollection->at(i)->getModified();
-
-    }
-}
-
-
-bool ProjectFile::readPatterns(QDataStream &stream, PatternCollection *newPatterncollection)
-{
-
-    newPatterncollection->clear();
-
-    while(!stream.atEnd()) {
-            qint32 type;
-            stream >> type;
-
-            if(type == Pattern::Scrolling)
-            {
-
-                Pattern *pattern = new Pattern(Pattern::Scrolling,
-                                                           QSize(1,1),0);
-                if(!pattern->getModel()->readDataFromStream(stream))
-                    return false;
-                newPatterncollection->add(pattern,newPatterncollection->count());
-            }
-            else if(type == Pattern::FrameBased)
-            {
-                Pattern *pattern = new Pattern(Pattern::FrameBased,
-                                                           QSize(1,1),0);
-                if(!pattern->getModel()->readDataFromStream(stream))
-                    return false;
-                newPatterncollection->add(pattern,newPatterncollection->count());
-            }
-            else
-            {
-                qDebug() << "Invalid data section type!";
-                return false;
-            }
-    }
-
-    return true;
-
 }

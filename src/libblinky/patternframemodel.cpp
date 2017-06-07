@@ -7,7 +7,7 @@
 #include <QPainter>
 
 PatternFrameModel::PatternFrameModel(QSize size, QObject *parent) :
-    PatternModel(parent)
+    PatternModel(Pattern::FrameBased, parent)
 {
     state.frameSize = size;
     state.frameSpeed = PATTERN_FRAME_SPEED_DEFAULT_VALUE;
@@ -174,6 +174,9 @@ bool PatternFrameModel::setData(const QModelIndex &index, const QVariant &value,
 
 bool PatternFrameModel::insertRows(int position, int rows, const QModelIndex &)
 {
+    if(rows <= 0)
+        return false;
+
     if(position < 0)
         return false;
 
@@ -200,6 +203,9 @@ bool PatternFrameModel::insertRows(int position, int rows, const QModelIndex &)
 
 bool PatternFrameModel::removeRows(int position, int rows, const QModelIndex &)
 {
+    if(rows <= 0)
+        return false;
+
     if(position < 0)
         return false;
 
@@ -221,18 +227,15 @@ bool PatternFrameModel::removeRows(int position, int rows, const QModelIndex &)
     return true;
 }
 
-QDataStream &operator<<(QDataStream &stream, const PatternFrameModel &model)
+void PatternFrameModel::toStream(QDataStream &stream) const
 {
-    stream << model.state.frameSize;
-    stream << model.state.fileName;
-    stream << model.state.frameSpeed;
-    stream << model.state.frames;
-
-    return stream;
+    stream << state.frameSize;
+    stream << state.fileName;
+    stream << state.frameSpeed;
+    stream << state.frames;
 }
 
-
-QDataStream &operator>>(QDataStream &stream, PatternFrameModel &model)
+void PatternFrameModel::fromStream(QDataStream &stream)
 {
     PatternFrameModel::State newState;
 
@@ -248,8 +251,6 @@ QDataStream &operator>>(QDataStream &stream, PatternFrameModel &model)
     for(QImage &frame : newState.frames)
         frame = frame.convertToFormat(QImage::Format_ARGB32_Premultiplied);
 
-    model.state = newState;
+    state = newState;
     // TODO: Be noisy with messages, since our state just changed?
-
-    return stream;
 }
