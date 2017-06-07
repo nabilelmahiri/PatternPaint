@@ -46,7 +46,8 @@ HEADERS += \
     usbdeviceidentifier.h \
     blinkycontrollerinfo.h \
     libblinkyglobal.h \
-    projectfile.h
+    projectfile.h \
+    scene.h
 
 SOURCES +=  \
     fixture.cpp \
@@ -84,7 +85,8 @@ SOURCES +=  \
     usbdeviceidentifier.cpp \
     blinkycontrollerinfo.cpp \
     projectfile.cpp \
-    patternmodel.cpp
+    patternmodel.cpp \
+    scene.cpp
 
 # For platforms that have serial ports
 # TODO: Pull hard-coded references to BlinkyTape from the gui, allowing this section to be switchable

@@ -290,7 +290,7 @@ QDataStream &operator<<(QDataStream &stream, const Pattern &pattern)
 {
     // TODO: Test if model exists first
 
-    stream << (int)(pattern.getModel()->type);
+    stream << (qint32)(pattern.getModel()->type);
     stream << *(pattern.getModel());
     return stream;
 }
@@ -300,7 +300,7 @@ QDataStream &operator>>(QDataStream &stream, Pattern &pattern)
     // TODO: Test if model exists
 
     Pattern::PatternType type;
-    stream >> (int &)type;
+    stream >> (qint32 &)type;
 
     PatternModel *newModel;
 

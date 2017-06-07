@@ -6,12 +6,17 @@
 #include "patterncollectionmodel.h"
 #include "patterncollection.h"
 #include "fixture.h"
-#include "firmwarestore.h"
-#include "scenetemplate.h"
+#include "scene.h"
 
 
 #define PROJECT_HEADER     "PatternPaint Project"   /// Header of PatternPaint Project
 #define PROJECT_FORMAT_VERSION     1.0              /// Version of PatternPaint Project format
+
+// The project file consists of the following objects:
+// PROJECT_HEADER
+// PROJECT_FORMAT_VERSION
+// sceneConfiguration
+// patternCollection
 
 
 class LIBBLINKY_EXPORT ProjectFile
@@ -19,17 +24,13 @@ class LIBBLINKY_EXPORT ProjectFile
 public:
     ProjectFile();
 
-    bool save(QString filename, QPointer<Fixture> fixture, PatternCollection* newPatternCollection);
+    bool save(QString filename, Scene *scene, PatternCollection* patternCollection);
 
-    bool open(QString filename, SceneTemplate* newSceneTemplate, PatternCollection* newPatternCollection);
+    bool open(QString filename, Scene *scene, PatternCollection* patternCollection);
 
-    void writeHeaderVersion(QDataStream& stream, float version);
+    void writeHeader(QDataStream& stream, float version);
 
-    float readHeaderVersion(QDataStream& stream);
-
-    void writeSceneConfiguration(QDataStream &stream, QPointer<Fixture> fixture);
-
-    bool readSceneConfiguration(QDataStream &stream, SceneTemplate* newScenetemplate);
+    float readHeader(QDataStream& stream);
 
 };
 

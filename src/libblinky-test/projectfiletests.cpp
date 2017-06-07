@@ -18,19 +18,24 @@ void ProjectFileTests::headerVersionTest()
     stream.setDevice(&buffer);
 
     // write header
-    newProjectFile.writeHeaderVersion(stream, PROJECT_FORMAT_VERSION);
+    newProjectFile.writeHeader(stream, PROJECT_FORMAT_VERSION);
 
     // reset
     buffer.reset();
 
     // read header
-    QCOMPARE(newProjectFile.readHeaderVersion(stream), PROJECT_FORMAT_VERSION);
+    QCOMPARE(newProjectFile.readHeader(stream), PROJECT_FORMAT_VERSION);
 }
 
 void ProjectFileTests::sceneConfigurationTest()
 {
-    ProjectFile newProjectFile;
-    SceneTemplate newScenetemplate;
+    Scene writeScene;
+    Scene readScene;
+
+    QString fixtureName("Linear");
+    QSize fixtureSize(1,2);
+    ColorMode fixtureColorMode(ColorMode::RGB);
+
 
     // Pack the data into a stream
     QBuffer buffer;
@@ -39,23 +44,25 @@ void ProjectFileTests::sceneConfigurationTest()
     QDataStream stream;
     stream.setDevice(&buffer);
 
-    // write scene configuration
-    fixture = Fixture::makeFixture("Linear", QSize(1,1));
 
-    fixture->setColorMode((ColorMode)RGB);
+    // Make a test scene
+    writeScene.fixture = Fixture::makeFixture(fixtureName, fixtureSize);
+    writeScene.fixture->setColorMode(fixtureColorMode);
+    writeScene.fixture->setBrightnessModel(new ExponentialBrightness(1.8,1.8,2.1));
 
-    newProjectFile.writeSceneConfiguration(stream, fixture);
+    stream << writeScene;
 
     // reset
     buffer.reset();
 
     // read scene configuration
-    QVERIFY(newProjectFile.readSceneConfiguration(stream, &newScenetemplate) == true);
+    stream >> readScene;
+    QCOMPARE(stream.status(), QDataStream::Ok);
+    // TODO: check that the controller firmware name was set
 
-    QCOMPARE(newScenetemplate.size, QSize(1,1));
-    QCOMPARE(newScenetemplate.fixtureType, QString("Linear"));
-    QCOMPARE(newScenetemplate.colorMode, ColorMode::RGB);
-    QCOMPARE(newScenetemplate.firmwareName, QString("default"));
+    QCOMPARE(readScene.fixture->getName(), fixtureName);
+    QCOMPARE(readScene.fixture->getExtents().size(), fixtureSize);
+    QCOMPARE(readScene.fixture->getColorMode(), fixtureColorMode);
 }
 
 void ProjectFileTests::patternsTest()

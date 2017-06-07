@@ -913,7 +913,6 @@ void MainWindow::applyScene(const SceneTemplate &scene)
 
     // Apply the new settings
     fixture = Fixture::makeFixture(scene.fixtureType, scene.size);
-
     fixture->setColorMode(scene.colorMode);
     fixture->setBrightnessModel(new ExponentialBrightness(1.8,1.8,2.1));
 
