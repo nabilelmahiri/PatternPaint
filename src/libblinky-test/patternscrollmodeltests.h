@@ -13,6 +13,7 @@ private slots:
     void flagsValidIndexTest();
 
     void supportedDropActionsTest();
+    void getTypeTest();
 
     void getUndoStackTest();
 

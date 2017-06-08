@@ -7,7 +7,7 @@
 #include <QPainter>
 
 PatternScrollModel::PatternScrollModel(QSize size, QObject *parent) :
-    PatternModel(Pattern::Scrolling, parent)
+    PatternModel(parent)
 {
     state.frameSize = size;
     state.frameSpeed = PATTERN_FRAME_SPEED_DEFAULT_VALUE;
@@ -37,6 +37,11 @@ Qt::ItemFlags PatternScrollModel::flags(const QModelIndex &index) const
 Qt::DropActions PatternScrollModel::supportedDropActions() const
 {
     return 0;
+}
+
+Pattern::PatternType PatternScrollModel::getType() const
+{
+    return Pattern::Scrolling;
 }
 
 void PatternScrollModel::pushUndoState()

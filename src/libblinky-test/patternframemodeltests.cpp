@@ -44,6 +44,14 @@ void PatternFrameModelTests::supportedDropActionsTest()
                                             | Qt::MoveAction));
 }
 
+void PatternFrameModelTests::getTypeTest()
+{
+    QSize startSize(1,2);
+    PatternFrameModel model(startSize);
+
+    QCOMPARE(model.getType(), Pattern::FrameBased);
+}
+
 void PatternFrameModelTests::getUndoStackTest()
 {
     // Just a cursory test

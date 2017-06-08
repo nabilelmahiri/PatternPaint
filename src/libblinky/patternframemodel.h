@@ -34,6 +34,8 @@ public:
 
     Qt::DropActions supportedDropActions() const;
 
+    Pattern::PatternType getType() const;
+
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
     bool insertRows(int position, int rows, const QModelIndex &index = QModelIndex());

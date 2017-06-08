@@ -27,9 +27,8 @@ public:
         EditImage,                      // Image data for editing
     };
 
-    PatternModel(Pattern::PatternType type, QObject *parent = 0) :
-        QAbstractListModel(parent),
-        type(type)
+    PatternModel(QObject *parent = 0) :
+        QAbstractListModel(parent)
     {
     }
 
@@ -46,12 +45,12 @@ public:
     virtual bool insertRows(int position, int rows, const QModelIndex &index = QModelIndex()) = 0;
     virtual bool removeRows(int position, int rows, const QModelIndex &index = QModelIndex()) = 0;
 
+    virtual Pattern::PatternType getType() const = 0;
+
     virtual QUndoStack *getUndoStack() = 0;
 
     friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const PatternModel &model);
     friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, PatternModel &model);
-
-    const Pattern::PatternType type;
 
 private:
     virtual void toStream(QDataStream &stream) const = 0;

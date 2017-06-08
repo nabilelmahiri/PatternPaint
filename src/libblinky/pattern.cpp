@@ -79,7 +79,7 @@ bool Pattern::load(const QString &newFileName)
         return false;
 
 
-    switch (model->type) {
+    switch (model->getType()) {
     case FrameBased:
     {
         QSize frameSize = model->data(model->index(0), PatternModel::FrameSize).toSize();
@@ -150,7 +150,7 @@ bool Pattern::saveAs(const QString newFileName)
     QSize frameSize = model->data(model->index(0), PatternModel::FrameSize).toSize();
     QImage output;
 
-    switch (model->type) {
+    switch (model->getType()) {
     case FrameBased:
     {
         // Create a big image consisting of all the frames side-by-side
@@ -249,7 +249,7 @@ bool Pattern::hasTimeline() const
 
 Pattern::PatternType Pattern::getType() const
 {
-    return model->type;
+    return model->getType();
 }
 
 void Pattern::setModel(PatternModel *newModel)
@@ -290,7 +290,7 @@ QDataStream &operator<<(QDataStream &stream, const Pattern &pattern)
 {
     // TODO: Test if model exists first
 
-    stream << (qint32)(pattern.getModel()->type);
+    stream << (qint32)(pattern.getModel()->getType());
     stream << *(pattern.getModel());
     return stream;
 }

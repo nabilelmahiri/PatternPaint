@@ -42,6 +42,14 @@ void PatternScrollModelTests::supportedDropActionsTest()
     QCOMPARE(model.supportedDropActions(), 0);
 }
 
+void PatternScrollModelTests::getTypeTest()
+{
+    QSize startSize(1,2);
+    PatternScrollModel model(startSize);
+
+    QCOMPARE(model.getType(), Pattern::Scrolling);
+}
+
 void PatternScrollModelTests::getUndoStackTest()
 {
     // Just a cursory test

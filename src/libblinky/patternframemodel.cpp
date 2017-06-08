@@ -7,7 +7,7 @@
 #include <QPainter>
 
 PatternFrameModel::PatternFrameModel(QSize size, QObject *parent) :
-    PatternModel(Pattern::FrameBased, parent)
+    PatternModel(parent)
 {
     state.frameSize = size;
     state.frameSpeed = PATTERN_FRAME_SPEED_DEFAULT_VALUE;
@@ -37,6 +37,11 @@ Qt::DropActions PatternFrameModel::supportedDropActions() const
 {
     return (Qt::CopyAction
             | Qt::MoveAction);
+}
+
+Pattern::PatternType PatternFrameModel::getType() const
+{
+    return Pattern::FrameBased;
 }
 
 void PatternFrameModel::pushUndoState()
