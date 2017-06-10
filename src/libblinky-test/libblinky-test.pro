@@ -35,7 +35,8 @@ HEADERS += \
     patternscrollmodeltests.h \
     eightbyeightcommandstests.h \
     esp8266bootloadercommandstests.h \
-    projectfiletests.h
+    projectfiletests.h \
+    patterntests.h
 
 SOURCES += \
     avr109commandstests.cpp \
@@ -59,4 +60,5 @@ SOURCES += \
     patternscrollmodeltests.cpp \
     eightbyeightcommandstests.cpp \
     esp8266bootloadercommandstests.cpp \
-    projectfiletests.cpp
+    projectfiletests.cpp \
+    patterntests.cpp

@@ -49,6 +49,7 @@ public:
 
     virtual QUndoStack *getUndoStack() = 0;
 
+    // TODO: These can't be used safely.
     friend LIBBLINKY_EXPORT QDataStream &operator<<(QDataStream &stream, const PatternModel &model);
     friend LIBBLINKY_EXPORT QDataStream &operator>>(QDataStream &stream, PatternModel &model);
 

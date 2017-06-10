@@ -21,6 +21,7 @@
 #include "patternscrollmodeltests.h"
 #include "esp8266bootloadercommandstests.h"
 #include "projectfiletests.h"
+#include "patterntests.h"
 
 int main(int argc, char *argv[])
 {
@@ -91,6 +92,9 @@ int main(int argc, char *argv[])
 
     ProjectFileTests projectFileTests;
     result |= QTest::qExec(&projectFileTests);
+
+    PatternTests patternTests;
+    result |= QTest::qExec(&patternTests);
 
     return result;
 }

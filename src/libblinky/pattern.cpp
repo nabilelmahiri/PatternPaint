@@ -298,7 +298,6 @@ QDataStream &operator<<(QDataStream &stream, const Pattern &pattern)
 QDataStream &operator>>(QDataStream &stream, Pattern &pattern)
 {
     // TODO: Test if model exists
-
     Pattern::PatternType type;
     stream >> (qint32 &)type;
 
