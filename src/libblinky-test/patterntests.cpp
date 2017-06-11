@@ -7,7 +7,6 @@
 #include "patternframemodel.h"
 #include "patternscrollmodel.h"
 
-
 void PatternTests::readFromStreamFrameBasedTest()
 {
     // Write a pattern model to the stream

@@ -22,6 +22,7 @@
 #include "esp8266bootloadercommandstests.h"
 #include "projectfiletests.h"
 #include "patterntests.h"
+#include "patterncollectiontests.h"
 
 int main(int argc, char *argv[])
 {
@@ -95,6 +96,9 @@ int main(int argc, char *argv[])
 
     PatternTests patternTests;
     result |= QTest::qExec(&patternTests);
+
+    PatternCollectionTests patternCollectionTests;
+    result |= QTest::qExec(&patternCollectionTests);
 
     return result;
 }
