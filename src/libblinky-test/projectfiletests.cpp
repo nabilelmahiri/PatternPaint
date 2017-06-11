@@ -7,9 +7,6 @@
 
 void ProjectFileTests::headerVersionTest()
 {
-
-    ProjectFile newProjectFile;
-
     // Pack the data into a stream
     QBuffer buffer;
     buffer.open(QBuffer::ReadWrite);
@@ -18,13 +15,13 @@ void ProjectFileTests::headerVersionTest()
     stream.setDevice(&buffer);
 
     // write header
-    newProjectFile.writeHeader(stream, PROJECT_FORMAT_VERSION);
+    ProjectFile::writeHeader(stream, PROJECT_FORMAT_VERSION);
 
     // reset
     buffer.reset();
 
     // read header
-    QCOMPARE(newProjectFile.readHeader(stream), PROJECT_FORMAT_VERSION);
+    QCOMPARE(ProjectFile::readHeader(stream), PROJECT_FORMAT_VERSION);
 }
 
 void ProjectFileTests::sceneConfigurationTest()
@@ -36,14 +33,12 @@ void ProjectFileTests::sceneConfigurationTest()
     QSize fixtureSize(1,2);
     ColorMode fixtureColorMode(ColorMode::RGB);
 
-
     // Pack the data into a stream
     QBuffer buffer;
     buffer.open(QBuffer::ReadWrite);
 
     QDataStream stream;
     stream.setDevice(&buffer);
-
 
     // Make a test scene
     writeScene.fixture = Fixture::makeFixture(fixtureName, fixtureSize);

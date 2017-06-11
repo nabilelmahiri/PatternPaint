@@ -24,13 +24,13 @@ class LIBBLINKY_EXPORT ProjectFile
 public:
     ProjectFile();
 
-    bool save(QString filename, Scene *scene, PatternCollection* patternCollection);
+    static bool save(QString filename, Scene *scene, PatternCollection* patternCollection);
 
-    bool open(QString filename, Scene *scene, PatternCollection* patternCollection);
+    static bool open(QString filename, Scene *scene, PatternCollection* patternCollection);
 
-    void writeHeader(QDataStream& stream, float version);
+    static void writeHeader(QDataStream& stream, float version);
 
-    float readHeader(QDataStream& stream);
+    static float readHeader(QDataStream& stream);
 
 };
 
