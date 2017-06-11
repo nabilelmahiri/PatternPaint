@@ -15,7 +15,7 @@
 // The project file consists of the following objects:
 // PROJECT_HEADER
 // PROJECT_FORMAT_VERSION
-// sceneConfiguration
+// scene
 // patternCollection
 
 

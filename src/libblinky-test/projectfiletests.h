@@ -15,8 +15,6 @@ private slots:
 
     void sceneConfigurationTest();
 
-    void patternsTest();
-
 private:
 
     QPointer<Fixture> fixture;

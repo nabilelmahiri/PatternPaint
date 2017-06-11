@@ -59,38 +59,3 @@ void ProjectFileTests::sceneConfigurationTest()
     QCOMPARE(readScene.fixture->getExtents().size(), fixtureSize);
     QCOMPARE(readScene.fixture->getColorMode(), fixtureColorMode);
 }
-
-void ProjectFileTests::patternsTest()
-{
-    PatternCollection writePatternCollection;
-    PatternCollection readPatternCollection;
-
-    // Pack the data into a stream
-    QBuffer buffer;
-    buffer.open(QBuffer::ReadWrite);
-
-    QDataStream stream;
-    stream.setDevice(&buffer);
-
-    // write patterns
-    Pattern::PatternType type = Pattern::Scrolling;
-    QSize size = QSize(3,7);
-    float frameSpeed = 15.5;
-
-    Pattern *newPattern = new Pattern(type, size, 1);
-    newPattern->setFrameSpeed(frameSpeed);
-    writePatternCollection.add(newPattern,0);
-
-    stream << writePatternCollection;
-
-    // reset
-    buffer.reset();
-
-    // read patterns
-    stream >> readPatternCollection;
-    QCOMPARE(stream.status(), QDataStream::Ok);
-    QCOMPARE(readPatternCollection.count(), 1);
-    QCOMPARE(readPatternCollection.at(0)->getType(), type);
-    QCOMPARE(readPatternCollection.at(0)->getFrameSize(), size);
-    QCOMPARE(readPatternCollection.at(0)->getFrameSpeed(), frameSpeed);
-}

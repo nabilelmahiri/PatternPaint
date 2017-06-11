@@ -82,11 +82,52 @@ void PatternCollectionTests::writeToStreamTest()
 
     QCOMPARE(patterns.count(), patternCollection.count());
 
-    QCOMPARE(patternCollection.count(), patterns.count());
-
     for(int i = 0; i < patternCollection.count(); i++) {
         Pattern* expected = patternCollection.at(i);
         Pattern* test = patterns.at(i);
+
+        // TODO: Add pattern comparison operator, drop these
+        QCOMPARE(test->getType(), expected->getType());
+        QCOMPARE(test->getFrameCount(), expected->getFrameCount());
+        QCOMPARE(test->getFrameSize(), expected->getFrameSize());
+        QCOMPARE(test->getName(), expected->getName());
+    }
+
+    QString endOfStreamMarker;
+    stream >> endOfStreamMarker;
+    QCOMPARE(endOfStreamMarker, QString("endOfStream"));
+}
+
+void PatternCollectionTests::streamLoopbackTest()
+{
+    // Create a sample patternCollection
+    PatternCollection writePatternCollection;
+
+    writePatternCollection.add(new Pattern(Pattern::Scrolling, QSize(1,2),10), 0);
+    writePatternCollection.add(new Pattern(Pattern::Scrolling, QSize(3,4),11), 1);
+    writePatternCollection.add(new Pattern(Pattern::FrameBased, QSize(5,6),12), 2);
+    writePatternCollection.add(new Pattern(Pattern::FrameBased, QSize(7,8),13), 3);
+
+    // Pack the list into a stream
+    QBuffer buffer;
+    buffer.open(QBuffer::ReadWrite);
+
+    QDataStream stream;
+    stream.setDevice(&buffer);
+
+    stream << writePatternCollection;
+    stream << QString("endOfStream");
+    buffer.reset();
+
+    // and read it back as a lsit of patterns
+    PatternCollection readPatternCollection;
+    stream >> readPatternCollection;
+
+    QCOMPARE(readPatternCollection.count(), writePatternCollection.count());
+
+    for(int i = 0; i < readPatternCollection.count(); i++) {
+        Pattern* expected = writePatternCollection.at(i);
+        Pattern* test = readPatternCollection.at(i);
 
         // TODO: Add pattern comparison operator, drop these
         QCOMPARE(test->getType(), expected->getType());

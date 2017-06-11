@@ -11,6 +11,7 @@ private slots:
 
     void readFromStreamTest();
     void writeToStreamTest();
+    void streamLoopbackTest();
 };
 
 #endif // PATTERNCOLLECTIONTESTS_H
