@@ -1,6 +1,8 @@
 #ifndef PATTERNCOLLECTIONTESTS_H
 #define PATTERNCOLLECTIONTESTS_H
 
+#include "multitests.h"
+
 #include <QObject>
 
 class PatternCollectionTests : public QObject
@@ -13,5 +15,7 @@ private slots:
     void writeToStreamTest();
     void streamLoopbackTest();
 };
+
+TEST_DECLARE(PatternCollectionTests)
 
 #endif // PATTERNCOLLECTIONTESTS_H

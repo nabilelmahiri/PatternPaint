@@ -1,6 +1,8 @@
 #ifndef PATTERNTESTS_H
 #define PATTERNTESTS_H
 
+#include "multitests.h"
+
 #include <QObject>
 
 class PatternTests : public QObject
@@ -15,5 +17,7 @@ private slots:
     void readFromStreamScrollingTest();
     void writeToStreamScrollingTest();
 };
+
+TEST_DECLARE(PatternTests)
 
 #endif // PATTERNTESTS_H

@@ -4,6 +4,8 @@
 
 #include "projectfiletests.h"
 
+#include "projectfile.h"
+#include "exponentialbrightness.h"
 
 void ProjectFileTests::headerVersionTest()
 {

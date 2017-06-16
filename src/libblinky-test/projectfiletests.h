@@ -1,9 +1,7 @@
 #ifndef PROJECTFILETESTS_H
 #define PROJECTFILETESTS_H
 
-#include "projectfile.h"
-#include "exponentialbrightness.h"
-#include "pattern.h"
+#include "multitests.h"
 
 #include <QObject>
 
@@ -14,13 +12,8 @@ private slots:
     void headerVersionTest();
 
     void sceneConfigurationTest();
-
-private:
-
-    QPointer<Fixture> fixture;
-
 };
 
-
+TEST_DECLARE(ProjectFileTests)
 
 #endif // PROJECTFILETESTS_H
