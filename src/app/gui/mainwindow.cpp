@@ -262,6 +262,18 @@ MainWindow::MainWindow(QWidget *parent) :
     autoUpdater = new WinSparkleAutoUpdater(WINDOWS_RELEASE_APPCAST_URL);
 #endif // Q_OS_WIN
 
+    // TODO: Duplicated from main.cpp
+    QString language = settings.value("PatternPaint/language", DEFAULT_LANGUAGE).toString();
+    QString locale;
+
+    if(language == "<System Language>") {
+        locale = QLocale::system().name();
+    }
+    else {
+        locale = language;
+    }
+    autoUpdater->setLanguage(locale);
+
 #endif  // DISABLE_UPDATE_CHECKS
 }
 
@@ -356,7 +368,7 @@ void MainWindow::drawTimer_timeout()
 void MainWindow::connectionScannerTimer_timeout()
 {
     // If we are already connected, disregard.
-    if ((!controller.isNull()) || state == State_Uploading)
+    if (state != State_Disconnected)
         return;
 
     // Look for controllers
@@ -562,11 +574,46 @@ void MainWindow::on_actionSystem_Information_triggered()
 
 void MainWindow::on_uploaderFinished(bool result)
 {
-    state = State_Disconnected;
-
     qDebug() << "Uploader finished! Result:" << result;
-    if (!result)
-        showError("Error updating blinky- please try again.");
+
+    // Note: Must delete the dialog before showing errors on macOS
+    if(!dialog.isNull())
+        delete dialog;
+
+    if(state == State_Uploading) {
+        if (!result) {
+            QString message;
+            message.append("Error updating blinky- please try again.");
+
+            if(!uploader.isNull() && !uploader->getErrorString().isEmpty()) {
+                message.append("\n\nError Message: ");
+                message.append(uploader->getErrorString());
+            }
+
+            showError(message);
+        }
+
+        // TODO: Make the class responsible for cleaning itself up?
+        delete uploader;
+    }
+    else if(state == State_RestoringFirmware) {
+        if (!result) {
+            QString message;
+            message.append("Error restoring firmware- please try again.");
+
+            if(!loader.isNull() && !loader->getErrorString().isEmpty()) {
+                message.append("\n\nError Message: ");
+                message.append(loader->getErrorString());
+            }
+
+            showError(message);
+        }
+
+        // TODO: Make the class responsible for cleaning itself up?
+        delete loader;
+    }
+
+    state = State_Disconnected;
 }
 
 void MainWindow::on_actionVisit_the_Blinkinlabs_forum_triggered()
@@ -638,10 +685,9 @@ void MainWindow::on_actionRestore_firmware_triggered()
     // If the controller doesn't exist, create a new uploader based on the blinkytape
     // TODO: Replace this with a generic 'bootloader' search
     if (controller.isNull()) {
-        QPointer<FirmwareLoader> loader;
         loader = new Avr109FirmwareLoader(this);
 
-        QProgressDialog* dialog = makeProgressDialog(loader);
+        dialog = makeProgressDialog(loader);
 
         dialog->setWindowTitle("Firmware reset");
         dialog->setLabelText(
@@ -663,14 +709,12 @@ void MainWindow::on_actionRestore_firmware_triggered()
 
     // Otherwise, create it from the controller
     else {
-        QPointer<FirmwareLoader> loader;
-
         if (!controller->getFirmwareLoader(loader)) {
             showError("Firmware update not supported for this controller type!");
             return;
         }
 
-        QProgressDialog* dialog = makeProgressDialog(loader);
+        dialog = makeProgressDialog(loader);
 
         dialog->setWindowTitle("Firmware reset");
         dialog->setLabelText("Loading new firmware onto Blinky");
@@ -683,7 +727,7 @@ void MainWindow::on_actionRestore_firmware_triggered()
             return;
         }
     }
-    state = State_Uploading;
+    state = State_RestoringFirmware;
 }
 
 void MainWindow::on_actionSave_to_Blinky_triggered()
@@ -694,8 +738,6 @@ void MainWindow::on_actionSave_to_Blinky_triggered()
 
     if (controller.isNull())
         return;
-
-    QPointer<BlinkyUploader> uploader;
 
     if (!controller->getPatternUploader(uploader)) {
         showError("Upload failed: Upload to this controller type not (yet) supported.");
@@ -716,7 +758,7 @@ void MainWindow::on_actionSave_to_Blinky_triggered()
         patternWriters.append(patternWriter);
     }
 
-    QProgressDialog* dialog = makeProgressDialog(uploader);
+    dialog = makeProgressDialog(uploader);
 
     dialog->setWindowTitle(tr("Blinky exporter"));
     dialog->setLabelText(tr("Saving to Blinky..."));

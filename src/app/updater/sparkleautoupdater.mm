@@ -15,7 +15,7 @@ class SparkleAutoUpdater::Private
         SUUpdater* updater;
 };
 
-SparkleAutoUpdater::SparkleAutoUpdater(const QString& aUrl)
+SparkleAutoUpdater::SparkleAutoUpdater(const QString &aUrl)
 {
     d = new Private;
 
@@ -31,6 +31,15 @@ SparkleAutoUpdater::~SparkleAutoUpdater()
 {
     [d->updater release];
     delete d;
+}
+
+
+void SparkleAutoUpdater::setLanguage(const QString &language)
+{
+    Q_UNUSED(language)
+
+    // TODO: Sparkle doesn't seem to allow for language overrides:
+    // https://github.com/sparkle-project/Sparkle/issues/477
 }
 
 void SparkleAutoUpdater::init()

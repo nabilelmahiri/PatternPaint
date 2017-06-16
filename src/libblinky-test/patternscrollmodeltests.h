@@ -1,6 +1,8 @@
 #ifndef PATTERNSCROLLMODELTESTS_H
 #define PATTERNSCROLLMODELTESTS_H
 
+#include "multitests.h"
+
 #include <QObject>
 
 class PatternScrollModelTests : public QObject
@@ -57,5 +59,7 @@ private slots:
     void readFromStreamTest();
     void writeToStreamTest();
 };
+
+TEST_DECLARE(PatternScrollModelTests)
 
 #endif // PATTERNSCROLLMODELTESTS_H

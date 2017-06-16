@@ -1,6 +1,8 @@
 #ifndef PATTERNFRAMEMODELTESTS_H
 #define PATTERNFRAMEMODELTESTS_H
 
+#include "multitests.h"
+
 #include <QObject>
 
 class PatternFrameModelTests : public QObject
@@ -55,5 +57,7 @@ private slots:
     void readFromStreamTest();
     void writeToStreamTest();
 };
+
+TEST_DECLARE(PatternFrameModelTests)
 
 #endif // PATTERNFRAMEMODELTESTS_H

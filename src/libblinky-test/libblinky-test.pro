@@ -38,6 +38,7 @@ HEADERS += \
     projectfiletests.h \
     patterntests.h \
     patterncollectiontests.h
+    multitests.h
 
 SOURCES += \
     avr109commandstests.cpp \
