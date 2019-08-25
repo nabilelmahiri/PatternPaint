@@ -3,7 +3,7 @@ dist: trusty
 
 before_install:
   - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-trusty
+  - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.10.1-trusty
   - sudo apt-get update -qq
 
 install:
