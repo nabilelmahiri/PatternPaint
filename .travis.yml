@@ -8,7 +8,7 @@ before_install:
 
 install:
     #- sudo apt-get -y install gcc-5 g++-5 qt512base qt512declarative qt512serialport libusb-1.0-0-dev icnsutils
-  - sudo apt-get -y install qt512base qt512declarative qt512serialport libusb-1.0-0-dev icnsutils
+  - sudo apt-get -y install qt512base qt512declarative qt512serialport libusb-1.0-0-dev icnsutils libgl1-mesa-dev
 
     #  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50
     #  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
