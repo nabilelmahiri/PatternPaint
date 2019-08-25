@@ -6,13 +6,13 @@ set -e
 # Location of the QT tools
 if [ -z ${QTDIR+x} ]; then
 	echo "QTDIR not defined- please set it to the location containing the Qt version to build against. For example:"
-	echo "  export QTDIR=~/Qt5.8.0/5.8/gcc_64"
+	echo "  export QTDIR=~/Qt/5.13.0/gcc_64/"
 	exit 1
 fi
 
 QMAKE=${QTDIR}/bin/qmake
 MAKE=make
-LINUXDEPLOYQT=`pwd`/linuxdeployqt
+LINUXDEPLOYQT=`pwd`/linuxdeployqt-continuous-x86_64.AppImage
 
 # Location of the source tree
 SOURCEDIR=`pwd`/src

@@ -3,25 +3,24 @@ dist: trusty
 
 before_install:
   - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository --yes ppa:beineri/opt-qt58-trusty
-#  - sudo add-apt-repository --yes ppa:beineri/opt-qt59-trusty
+  - sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-trusty
   - sudo apt-get update -qq
 
 install:
 #  - sudo apt-get -y install gcc-5 g++-5 qt59base qt59declarative qt59serialport libusb-1.0-0-dev icnsutils
-  - sudo apt-get -y install gcc-5 g++-5 qt58base qt58declarative qt58serialport libusb-1.0-0-dev icnsutils
+  - sudo apt-get -y install gcc-5 g++-5 qt510base qt510declarative qt510serialport libusb-1.0-0-dev icnsutils
 
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
   - sudo update-alternatives --set gcc /usr/bin/gcc-5
   - sudo update-alternatives --set g++ /usr/bin/g++-5
 
-#  - wget -c https://github.com/probonopd/linuxdeployqt/releases/download/2/linuxdeployqt-2-x86_64.AppImage -O linuxdeployqt
-  - wget -c https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage -O linuxdeployqt
-  - chmod a+x linuxdeployqt
+  - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+  - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+  - ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
 
-  - export QTDIR=/opt/qt58
-#  - export QTDIR=/opt/qt59
+
+  - export QTDIR=/opt/qt510
 
 script: ./dist_linux.sh
 
