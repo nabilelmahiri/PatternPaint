@@ -64,6 +64,6 @@ unset LD_LIBRARY_PATH # Remove too old Qt from the search path; TODO: Move insid
 PATH=${QTDIR}/bin:${PATH} ${LINUXDEPLOYQT} app/PatternPaint -bundle-non-qt-libs
 PATH=${QTDIR}/bin:${PATH} ${LINUXDEPLOYQT} app/PatternPaint -appimage
 
-tar -cjf PatternPaint-x86_64_${VERSION}.tar.bz2 PatternPaint-x86_64.AppImage
+tar -cjf PatternPaint-x86_64_${VERSION}.tar.bz2 PatternPaint-*-x86_64.AppImage
 
 popd
