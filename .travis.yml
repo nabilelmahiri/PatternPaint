@@ -7,12 +7,13 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install gcc-5 g++-5 qt512base qt512declarative qt512serialport libusb-1.0-0-dev icnsutils
+    #- sudo apt-get -y install gcc-5 g++-5 qt512base qt512declarative qt512serialport libusb-1.0-0-dev icnsutils
+  - sudo apt-get -y install qt512base qt512declarative qt512serialport libusb-1.0-0-dev icnsutils
 
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
-  - sudo update-alternatives --set gcc /usr/bin/gcc-5
-  - sudo update-alternatives --set g++ /usr/bin/g++-5
+    #  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50
+    #  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
+    #  - sudo update-alternatives --set gcc /usr/bin/gcc-5
+    #  - sudo update-alternatives --set g++ /usr/bin/g++-5
 
   - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
   - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
