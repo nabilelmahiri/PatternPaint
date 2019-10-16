@@ -54,7 +54,6 @@ cp ${SOURCEDIR}/app/patternpaint.desktop ./
 
 popd
 
-
 # TODO: this should be done automagically though the qt build tools?
 mkdir -p app/lib
 cp libblinky/libblinky.so.1 app/lib
@@ -65,5 +64,8 @@ PATH=${QTDIR}/bin:${PATH} ${LINUXDEPLOYQT} app/PatternPaint -bundle-non-qt-libs
 PATH=${QTDIR}/bin:${PATH} ${LINUXDEPLOYQT} app/PatternPaint -appimage
 
 tar -cjf PatternPaint-x86_64_${VERSION}.tar.bz2 PatternPaint-*-x86_64.AppImage
+
+pwd
+ls *.AppImage
 
 popd
