@@ -29,6 +29,10 @@
 #define FRAME_COUNT_OFFSET      3    // Frame count (2 bytes)
 #define FRAME_DELAY_OFFSET      5    // Frame delay (2 bytes)
 
+// switch pattern after 10 seconds
+static uint32_t prevTime;
+uint32_t curTime = millis();
+  
 
 // LED data array
 struct CRGB leds[MAX_LEDS];   // Space to hold the current LED data
@@ -92,29 +96,34 @@ void setBrightness(uint8_t newBrightness) {
     EEPROM.write(BRIGHTNESS_EEPROM_ADDRESS, currentBrightness);
   }
 
-  LEDS.setBrightness(brightnesSteps[currentBrightness]);
+//  LEDS.setBrightness(brightnesSteps[currentBrightness]);
+  LEDS.setBrightness(93);
 }
 
 // Called when the button is both pressed and released.
 ISR(PCINT0_vect) {
   buttonState = !(PINB & (1 << PINB6)); // Reading state of the PB6 (remember that HIGH == released)
-
-  if (buttonState) {
-    // On button down, record the time so we can convert this into a gesture later
-    buttonDownTime = millis();
-    buttonDebounced = false;
-
-    // And configure and start timer4 interrupt.
-    TCCR4B = 0x0F; // Slowest prescaler
-    TCCR4D = _BV(WGM41) | _BV(WGM40);  // Fast PWM mode
-    OCR4C = 0x10;        // some random percentage of the clock
-    TCNT4 = 0;  // Reset the counter
-    TIMSK4 = _BV(TOV4);  // turn on the interrupt
-
+  bool dis = false;
+  if(dis){
+    if (buttonState ) {
+      // On button down, record the time so we can convert this into a gesture later
+      buttonDownTime = millis();
+      buttonDebounced = false;
+  
+      // And configure and start timer4 interrupt.
+      TCCR4B = 0x0F; // Slowest prescaler
+      TCCR4D = _BV(WGM41) | _BV(WGM40);  // Fast PWM mode
+      OCR4C = 0x10;        // some random percentage of the clock
+      TCNT4 = 0;  // Reset the counter
+      TIMSK4 = _BV(TOV4);  // turn on the interrupt
+  
+    }
+    else {
+      TIMSK4 = 0;  // turn off the interrupt
+    }
+    
   }
-  else {
-    TIMSK4 = 0;  // turn off the interrupt
-  }
+
 }
 
 // This is called every xx ms while the button is being held down; it counts down then displays a
@@ -152,6 +161,7 @@ void setup()
   PCIFR  |= (1 << PCIF0);  // Just in case, clear interrupt flag
   PCMSK0 |= (1 << PCINT6); // Set interrupt mask to the button pin (PCINT6)
   PCICR  |= (1 << PCIE0);  // Enable interrupt
+
 
   // First, load the pattern count and LED geometry from the pattern table
   patternCount = pgm_read_byte(PATTERN_TABLE_ADDRESS + PATTERN_COUNT_OFFSET);
@@ -198,6 +208,15 @@ void loop()
     serialLoop(leds);
   }
 
+
+  if ( curTime - prevTime >= 10*1000UL )
+  {
+    prevTime = curTime;
+     // first unroll the brightness!
+     setBrightness(lastBrightness); 
+    setPattern(currentPattern + 1);
+  }
+  
   pattern.draw(leds);
 
   // TODO: More sophisticated wait loop to get constant framerate.
